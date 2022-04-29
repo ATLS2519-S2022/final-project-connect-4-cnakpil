@@ -1,5 +1,5 @@
 /**
- * A Connect-4 player that makes the best move looking ahead.
+ * A Connect-4 player that makes the best move looking ahead in the time provided.
  * 
  * @author Celine Nakpil (celine.nakpil@colorado.edu)
  *
