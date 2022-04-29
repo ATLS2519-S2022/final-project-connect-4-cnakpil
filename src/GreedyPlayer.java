@@ -32,7 +32,7 @@ public class GreedyPlayer implements Player
         int[] score = new int [col]; //total number
         
         
-        //calculate scores for each move, find best
+        //calculate scores for each move, find "best" move
         for (int c = 0; c < col; c++) { 
         	if(board.isValidMove(c)) {
         		board.move(c, id);
@@ -54,6 +54,12 @@ public class GreedyPlayer implements Player
         arb.setMove(maxCol);
     }
     
+    /**
+     * 
+     * @param board connect 4 game board
+     * @param id int of move
+     * @return returns int score of move 
+     */
 	public int calcScore(Connect4Board board, int id)
 	{
 		final int rows = board.numRows();

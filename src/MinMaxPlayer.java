@@ -9,7 +9,6 @@ public class MinMaxPlayer implements Player
 	int id;
 	int opp_id;
 	int col;
-//	int bestCol;
 	
     @Override
     public String name() {
@@ -59,6 +58,14 @@ public class MinMaxPlayer implements Player
         }
     }
     
+    /**
+     * 
+     * @param board
+     * @param depth
+     * @param isMaxing
+     * @param arb
+     * @return
+     */
     public int minmax(Connect4Board board, int depth, boolean isMaxing, Arbitrator arb) {
     	if(depth == 0 || board.numEmptyCells() == 0 || arb.isTimeUp()) {
     		return score(board);
@@ -91,10 +98,21 @@ public class MinMaxPlayer implements Player
 		}
     }
     
+    /**
+     * 
+     * @param board
+     * @return
+     */
     public int score(Connect4Board board) {
     	return calcScore(board, id) - calcScore(board, opp_id);
     }
     
+    /**
+     * 
+     * @param board
+     * @param id
+     * @return
+     */
     public int calcScore(Connect4Board board, int id) {
     	final int rows = board.numRows();
     	final int cols = board.numCols();
