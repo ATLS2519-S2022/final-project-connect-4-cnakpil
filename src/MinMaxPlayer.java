@@ -1,13 +1,24 @@
 /**
- * A Connect-4 player that makes the best move looking ahead in the time provided.
+ * A Connect-4 player that makes the best move looking ahead in the time available.
  * 
  * @author Celine Nakpil (celine.nakpil@colorado.edu)
  *
  */
 public class MinMaxPlayer implements Player
 {
+	/**
+	 * integer identifier for the player
+	 */
 	int id;
+	
+	/**
+	 * integer identifier for opponent
+	 */
 	int opp_id;
+	
+	/**
+	 * number of columns on the game board
+	 */
 	int col;
 	
     @Override
@@ -23,9 +34,7 @@ public class MinMaxPlayer implements Player
     }
 
     @Override
-    public void calcMove(
-        Connect4Board board, int oppMoveCol, Arbitrator arb) 
-        throws TimeUpException {
+    public void calcMove(Connect4Board board, int oppMoveCol, Arbitrator arb) throws TimeUpException {
         // Make sure there is room to make a move.
         if (board.isFull()) {
             throw new Error ("Complaint: The board is full!");
@@ -39,9 +48,8 @@ public class MinMaxPlayer implements Player
             	if(board.isValidMove(c)) {
             		board.move(c, id);
             		score[c] = minmax(board, maxDepth-1, false, arb);
-            		board.unmove(c,  id);
-            	}
-            	else score[c] = -1000;
+            		board.unmove(c, id);
+            	}else score[c] = -1000;
             }
         	
         	int bestCol = 0;
@@ -59,39 +67,38 @@ public class MinMaxPlayer implements Player
     }
     
     /**
+     * Calculates the best move, taking into account future possible moves via recursion
      * 
-     * @param board
-     * @param depth
-     * @param isMaxing
-     * @param arb
-     * @return
+     * @param board Connect-4 game board
+     * @param depth how far into the future
+     * @param isMaxing boolean controlling recursive function
+     * @param arb handles communication between board and player
+     * @return best possible score (column) as int value
      */
     public int minmax(Connect4Board board, int depth, boolean isMaxing, Arbitrator arb) {
+    	
+    	// if depth is 0, the board is full, or decision time length is up, return the score of the current move
     	if(depth == 0 || board.numEmptyCells() == 0 || arb.isTimeUp()) {
     		return score(board);
     	}
     	
     	if (isMaxing) {
     		int bestScore = -1000;
-    		for(int c = 0; c < col; c++) { //for each possible next move do
+    		for(int c = 0; c < col; c++) { //for each possible next move
     			if (board.isValidMove(c)) {
     				board.move(c, id);
     				bestScore = Math.max(bestScore, minmax(board, depth - 1, false, arb));
     				board.unmove(c, id);
-//    				bestCol = c;
     			}
     		}
     		return bestScore;
-    	}
-    		
-		else {
+    	}else {
 			int bestScore = 1000;
-			for(int c = 0; c < col; c++) { //for each possible next move do
+			for(int c = 0; c < col; c++) { //for each possible next move
 				if (board.isValidMove(c)) {
 					board.move(c, opp_id);
 					bestScore = Math.min(bestScore, minmax(board, depth - 1, true, arb));
 					board.unmove(c, opp_id);
-//					bestCol = c;
 				}
 			}
 		return bestScore;
@@ -99,28 +106,30 @@ public class MinMaxPlayer implements Player
     }
     
     /**
+     * Returns the score of the current move being tested using class global var id and opp_id.
      * 
-     * @param board
-     * @return
+     * @param board Connect-4 game board 
+     * @return score of current move
      */
     public int score(Connect4Board board) {
     	return calcScore(board, id) - calcScore(board, opp_id);
     }
     
     /**
+     * Calculates score of the current possible move.
      * 
-     * @param board
-     * @param id
-     * @return
+     * @param board Connect-4 game board
+     * @param id identifying int of this player
+     * @return returns int score of move 
      */
     public int calcScore(Connect4Board board, int id) {
-    	final int rows = board.numRows();
-    	final int cols = board.numCols();
+    	final int row = board.numRows();
+    	final int col = board.numCols();
     	int score = 0;
     	
     	// Look for horizontal connect-4s.
-    	for (int r = 0; r < rows; r++) {
-    		for (int c = 0; c<= cols -4; c++) {
+    	for (int r = 0; r < row; r++) {
+    		for (int c = 0; c<= col -4; c++) {
     			if (board.get(r, c + 0) != id) continue;
 				if (board.get(r, c + 1) != id) continue;
 				if (board.get(r, c + 2) != id) continue;
@@ -128,9 +137,10 @@ public class MinMaxPlayer implements Player
 				score++;
     		}
     	}
+    	
     	// Look for vertical connect-4s.
-    	for (int c = 0; c < cols; c++) {
-    		for (int r = 0; r <= rows -4; r++) {
+    	for (int c = 0; c < col; c++) {
+    		for (int r = 0; r <= row -4; r++) {
     			if (board.get(r + 0, c) != id) continue;
 				if (board.get(r + 1, c) != id) continue;
 				if (board.get(r + 2, c) != id) continue;
@@ -138,9 +148,10 @@ public class MinMaxPlayer implements Player
 				score++;
     		}
     	}
+    	
 		// Look for diagonal connect-4s.
-		for (int c = 0; c <= cols - 4; c++) {
-			for (int r = 0; r <= rows - 4; r++) {
+		for (int c = 0; c <= col - 4; c++) {
+			for (int r = 0; r <= row - 4; r++) {
 				if (board.get(r + 0, c + 0) != id) continue;
 				if (board.get(r + 1, c + 1) != id) continue;
 				if (board.get(r + 2, c + 2) != id) continue;
@@ -149,8 +160,8 @@ public class MinMaxPlayer implements Player
 			}
 		}
 
-		for (int c = 0; c <= cols - 4; c++) {
-			for (int r = rows - 1; r >= 4 - 1; r--) {
+		for (int c = 0; c <= col - 4; c++) {
+			for (int r = row - 1; r >= 4 - 1; r--) {
 				if (board.get(r - 0, c + 0) != id) continue;
 				if (board.get(r - 1, c + 1) != id) continue;
 				if (board.get(r - 2, c + 2) != id) continue;

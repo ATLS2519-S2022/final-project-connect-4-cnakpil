@@ -33,10 +33,7 @@ public class GreedyPlayer implements Player
             throw new Error ("Complaint: The board is full!");
         }
         
-        // define variables
         int[] score = new int [col]; //total number
-        double max = score[0];
-        int maxCol = 0;
         
         //calculate scores for each move, find column with highest number of points
         for (int c = 0; c < col; c++) { 
@@ -48,6 +45,8 @@ public class GreedyPlayer implements Player
         	else score[c] = -1000;
         }
         
+        double max = score[0];
+        int maxCol = 0;
         for(int i = 0; i < score.length; i++) {
         	if(score[i] > max) {
         		maxCol = i;
@@ -61,7 +60,7 @@ public class GreedyPlayer implements Player
     /**
      * Calculates score of the current possible move
      * 
-     * @param board connect 4 game board
+     * @param board Connect-4 game board
      * @param id identifying int of this player
      * @return returns int score of move 
      */
