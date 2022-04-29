@@ -1,5 +1,5 @@
 /**
- * A Connect-4 player that makes the best move in the moment.
+ * A Connect-4 player that makes the best current move.
  * 
  * @author Celine Nakpil (celine.nakpil@colorado.edu)
  *
@@ -21,18 +21,18 @@ public class GreedyPlayer implements Player
     }
 
     @Override
-    public void calcMove(
-        Connect4Board board, int oppMoveCol, Arbitrator arb) 
-        throws TimeUpException {
+    public void calcMove(Connect4Board board, int oppMoveCol, Arbitrator arb) throws TimeUpException {
         // Make sure there is room to make a move.
         if (board.isFull()) {
             throw new Error ("Complaint: The board is full!");
         }
         
+        // define variables
         int[] score = new int [col]; //total number
+        double max = score[0];
+        int maxCol = 0;
         
-        
-        //calculate scores for each move, find "best" move
+        //calculate scores for each move, find move with highest number of points
         for (int c = 0; c < col; c++) { 
         	if(board.isValidMove(c)) {
         		board.move(c, id);
@@ -42,15 +42,12 @@ public class GreedyPlayer implements Player
         	else score[c] = -1000;
         }
         
-        double max = score[0];
-        int maxCol = 0;
         for(int i = 0; i < score.length; i++) {
         	if(score[i] > max) {
         		maxCol = i;
         		max = score[i];
         	}
         }
-        
         arb.setMove(maxCol);
     }
     
