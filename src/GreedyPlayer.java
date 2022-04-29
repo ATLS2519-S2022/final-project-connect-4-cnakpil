@@ -6,7 +6,13 @@
  */
 public class GreedyPlayer implements Player
 {
+	/**
+	 * integer identifier for the player
+	 */
 	int id;
+	/**
+	 * number of columns on the game board
+	 */
 	int col;
 	
     @Override
@@ -32,7 +38,7 @@ public class GreedyPlayer implements Player
         double max = score[0];
         int maxCol = 0;
         
-        //calculate scores for each move, find move with highest number of points
+        //calculate scores for each move, find column with highest number of points
         for (int c = 0; c < col; c++) { 
         	if(board.isValidMove(c)) {
         		board.move(c, id);
@@ -48,6 +54,7 @@ public class GreedyPlayer implements Player
         		max = score[i];
         	}
         }
+        // set best move as next move
         arb.setMove(maxCol);
     }
     
@@ -55,7 +62,7 @@ public class GreedyPlayer implements Player
      * Calculates score of the current possible move
      * 
      * @param board connect 4 game board
-     * @param id int of move
+     * @param id identifying int of this player
      * @return returns int score of move 
      */
 	public int calcScore(Connect4Board board, int id)
